@@ -51,8 +51,35 @@ def index():
 
     return render_template('index.html', usuario=usuario.nome, vendas=vendas)
 
+@app.route('/nova-venda')
+def nova_venda():
+  return render_template('nova_venda.html')
 
+@app.route('/inserir', methods=['POST',])
+def inserir():
+  nf = request.form['nf']
+  data = request.form['data']
+  empresa = request.form['empresa']
+  vendedor = request.form['vendedor']
+  cliente = request.form['cliente']
+  produto = request.form['produto']
+  estado = request.form['estado']
+  valor = request.form['valor']
+  valor_final = request.form['valor_final']
+  parceiro = request.form['parceiro']
 
+  venda = Vendas.query.filter_by(nf=nf).first()
+
+  if venda:
+    flash('Jogo já existente')
+    return redirect('/')
+  
+  nova_vd = Vendas(nf=nf, data=data, empresa=empresa, vendedor=vendedor,cliente=cliente,produto=produto,estado=estado,valor=valor,valor_final=valor_final, parceiro=parceiro)
+
+  db.session.add(nova_vd)
+  db.session.commit()
+
+  return redirect('/')
 
 @app.route('/login')
 def login():
@@ -62,21 +89,21 @@ def login():
   else: 
     return redirect('/')
 
-  
+
 
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
 
-  usuario = Usuarios.query.filter_by(nome_de_usuario=request.form['nome_de_usuario']).first()
+    usuario = Usuarios.query.filter_by(nome_de_usuario=request.form['nome_de_usuario']).first()
 
-  if usuario:
-      if request.form['senha_do_usuario'] == usuario.senha:
-        session['usuario_logado'] = usuario.nome_de_usuario
-        flash(usuario.nome_de_usuario + "logado com sucesso")
-        return redirect('/')
-  else:
-    flash('Usuário não logado!')
-    return redirect('/login')
+    if usuario:
+        if request.form['senha_do_usuario'] == usuario.senha:
+          session['usuario_logado'] = usuario.nome_de_usuario
+          flash(usuario.nome_de_usuario + "logado com sucesso")
+          return redirect('/')
+    else:
+      flash('Usuário não logado!')
+      return redirect('/login')
   
 @app.route('/logout')
 def logout():
