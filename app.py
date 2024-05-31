@@ -89,7 +89,7 @@ def login():
   else: 
     return redirect('/')
 
-
+ 
 
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
