@@ -20,7 +20,7 @@
       ],
       datasets: [
         {
-          data: [15339, 22345, 18483, 24003, 23489, 24092, 12034],
+          data: [15339, 22345, 18483, 24003, 23489, 24092, 50000],
           lineTension: 0,
           backgroundColor: 'transparent',
           borderColor: '#007bff',
