@@ -1,26 +1,35 @@
 /* globals Chart:false */
+const dates = document.querySelectorAll('.dates')
+const values = document.querySelectorAll('.values')
+const array_dates = Array.from(dates)
+const array_values = Array.from(values)
 
+var lista = []
+var valores = []
+
+array_dates.forEach(item => {
+  lista.push(item.value)
+})
+
+array_values.forEach(item => {
+  valores.push(Number(item.value))
+})
+
+console.log(lista)
 ;(() => {
   'use strict'
 
   // Graphs
   const ctx = document.getElementById('myChart')
   // eslint-disable-next-line no-unused-vars
-  const myChart = new Chart(ctx, {
+
+  var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: [
-        'Domingo',
-        'Segunda-Feira',
-        'Terça-Feira',
-        'Quarta-Feira',
-        'Quinta-Feira',
-        'Sexta-Feira',
-        'Sábado'
-      ],
+      labels: lista,
       datasets: [
         {
-          data: [15339, 22345, 18483, 24003, 23489, 24092, 12034],
+          data: valores,
           lineTension: 0,
           backgroundColor: 'transparent',
           borderColor: '#007bff',

@@ -407,9 +407,12 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2"
+                    href="/nova-venda"
+                  >
                     <svg class="bi"><use xlink:href="#file-earmark" /></svg>
-                    Orders
+                    Nova venda
                   </a>
                 </li>
                 <li class="nav-item">
@@ -582,6 +585,18 @@
         </main>
       </div>
     </div>
+
+    {% for venda in vendas %}
+    <input type="hidden" name="dates" class="dates" value="{{ venda.data }}" />
+
+    <input
+      type="hidden"
+      name="values"
+      class="values"
+      value="{{ venda.valor }}"
+    />
+    {% endfor %}
+
     <script src="../static/assets/dist/js/bootstrap.bundle.min.js"></script>
 
     <script
@@ -596,6 +611,7 @@
         }
       })
     </script>
+
     <script src="../static/dashboard.js"></script>
   </body>
 </html>
