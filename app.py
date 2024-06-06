@@ -45,7 +45,7 @@ def index():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   else:
-    vendas = Vendas.query.order_by(Vendas.nf)
+    vendas = Vendas.query.order_by(Vendas.data)
 
     usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
