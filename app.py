@@ -58,7 +58,9 @@ def nova_venda():
 @app.route('/inserir', methods=['POST',])
 def inserir():
   nf = request.form['nf']
-  data = request.form['data']
+  dt_input = request.form['data'].split('-')
+  dt_input.reverse()
+  data_br = '/'.join(dt_input)
   empresa = request.form['empresa']
   vendedor = request.form['vendedor']
   cliente = request.form['cliente']
@@ -74,7 +76,7 @@ def inserir():
     flash('Jogo já existente')
     return redirect('/')
   
-  nova_vd = Vendas(nf=nf, data=data, empresa=empresa, vendedor=vendedor,cliente=cliente,produto=produto,estado=estado,valor=valor,valor_final=valor_final, parceiro=parceiro)
+  nova_vd = Vendas(nf=nf, data=data_br, empresa=empresa, vendedor=vendedor,cliente=cliente,produto=produto,estado=estado,valor=valor,valor_final=valor_final, parceiro=parceiro)
 
   db.session.add(nova_vd)
   db.session.commit()

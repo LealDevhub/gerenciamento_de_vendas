@@ -13,19 +13,12 @@ array_dates.forEach(item => {
 
 array_values.forEach(item => {
   var valor = Number(item.value)
-  if(valores.length == 0) {
+  if (valores.length == 0) {
     valores.push(valor)
   } else {
     valores.push(valor + valores[valores.length - 1])
   }
-
 })
-
-console.log(valores)
-
-
-
-
 ;(() => {
   'use strict'
 
