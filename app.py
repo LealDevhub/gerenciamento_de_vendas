@@ -49,11 +49,16 @@ def index():
 
     usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
+
     return render_template('index.html', usuario=usuario.nome, vendas=vendas)
 
 @app.route('/nova-venda')
 def nova_venda():
-  return render_template('nova_venda.html')
+  if 'usuario_logado' not in session or session['usuario_logado'] == None:
+    return redirect('/login')
+  else:
+    return render_template('nova_venda.html')
+  
 
 @app.route('/inserir', methods=['POST',])
 def inserir():
@@ -106,6 +111,65 @@ def autenticar():
     else:
       flash('Usuário não logado!')
       return redirect('/login')
+    
+@app.route('/alterar')
+def alterar():
+  if 'usuario_logado' not in session or session['usuario_logado'] == None:
+    return redirect('/login')
+  
+  nf_req_url = request.args.get('venda')
+  vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+
+  dt_bd = vd_localizada.data.split('/')
+  dt_bd.reverse()
+  vd_localizada.data = '-'.join(dt_bd)
+
+  return render_template("alterar.html", venda=vd_localizada)
+
+@app.route('/alterar-bd', methods=['POST',])
+def alterar_bd():
+
+  nf = request.form['nf']
+  venda = Vendas.query.filter_by(nf=nf).first()
+
+  venda.nf = nf
+  dt_input = request.form['data'].split('-')
+  dt_input.reverse()
+  venda.data = '/'.join(dt_input)
+  venda.empresa = request.form['empresa']
+  venda.vendedor = request.form['vendedor']
+  venda.cliente = request.form['cliente']
+  venda.produto = request.form['produto']
+  venda.estado = request.form['estado']
+  venda.valor = request.form['valor']
+  venda.valor_final = request.form['valor_final']
+  venda.parceiro = request.form['parceiro']
+
+  db.session.add(venda)
+  db.session.commit()
+
+  return redirect('/')
+
+@app.route('/excluir', methods=['POST'],)
+def excluir():
+  if 'usuario_logado' not in session or session['usuario_logado'] == None:
+    return redirect('/login')
+  
+  nf_req_url = request.args.get('venda')
+  vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+
+  usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
+
+  if request.form['senha'] == usuario.senha:
+
+    db.session.delete(vd_localizada)
+    db.session.commit()
+
+    return redirect('/')
+  else:
+    flash('Senha incorreta ao excluir, tente novamente !')
+
+  return redirect('/')
   
 @app.route('/logout')
 def logout():

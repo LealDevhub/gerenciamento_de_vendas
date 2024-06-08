@@ -564,6 +564,7 @@
                   <th scope="col">Valor</th>
                   <th scope="col">Valor final</th>
                   <th scope="col">Parceiro</th>
+                  <th scope="col">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -579,7 +580,45 @@
                   <td>{{ venda.valor }}</td>
                   <td>{{ venda.valor_final }}</td>
                   <td>{{ venda.parceiro }}</td>
+                  <td>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#JanelaModal">Excluir</button>
+                    <a href="/alterar?venda={{ venda.nf }}" class="btn btn-warning">Alterar</a>
+                    <button type="button" class="btn btn-info">RMA</button>
+                  </td>
                 </tr>
+
+                <div id="JanelaModal" class="modal fade">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <form action="/excluir?venda={{ venda.nf }}" method="post">
+                        <div class="modal-header">
+                          <h3 class="modal-title">Tem certeza que deseja excluir?</h3>
+                          <button type="button" class="btn btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+              
+                        <div class="modal-body">
+                            <div class="form-floating">
+                              <input
+                                type="password"
+                                class="form-control"
+                                id="floatingPassword"
+                                name="senha"
+                                placeholder="Digite sua senha"
+                              />
+                              <label for="floatingPassword">Digite sua senha</label>
+                            </div>
+                        </div>
+              
+                        <div class="modal-footer">
+                          <button type="submit" class="btn">Sim, tenho certeza</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                      </form>
+                      
+                    </div>
+                  </div>
+                </div>
+            
                 {% endfor %}
               </tbody>
             </table>
@@ -599,6 +638,9 @@
     />
     {% endfor %}
 
+    
+
+    
     <script src="../static/assets/dist/js/bootstrap.bundle.min.js"></script>
 
     <script
