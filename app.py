@@ -42,30 +42,35 @@ class Usuarios(db.Model):
 
 @app.route('/')
 def index():
-
+  # Condicional que identifica se o usuário está logado
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   else:
+    # adiciona a uma variável "vendas" uma lista ordenada por meio das datas das vendas no banco de dados
     vendas = Vendas.query.order_by(Vendas.data)
 
+    # adiciona a uma variável "usuário" o item do banco da dados filtrado pelo nome de usuário 
     usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
-
+    # renderiza o index, com atributos Nome, e envia a lista de vendas para o HTML
     return render_template('index.html', usuario=usuario.nome, vendas=vendas)
 
 @app.route('/nova-venda')
 def nova_venda():
+  # Condicional que identifica se o usuário está logado
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   else:
+    # renderiza o template de nova venda
     return render_template('nova_venda.html')
   
-
+# rota intermediária para inserir dados da app no Banco de dados
 @app.route('/inserir', methods=['POST',])
 def inserir():
   nf = request.form['nf']
   dt_input = request.form['data'].split('-')
   dt_input.reverse()
+  # a data está sendo formatada para o modelo usado no Brasil
   data_br = '/'.join(dt_input)
   empresa = request.form['empresa']
   vendedor = request.form['vendedor']
@@ -77,14 +82,18 @@ def inserir():
   parceiro = request.form['parceiro']
   rma = False
 
+  # adiciona a uma variável "venda" o item do banco da dados filtrado pelo numero da nf
   venda = Vendas.query.filter_by(nf=nf).first()
 
+  # condicional se a venda já existir no banco de dados
   if venda:
-    flash('Jogo já existente')
+    flash('Venda já existente')
     return redirect('/')
   
+  # variável nova_vd é atribuida uma instanciação da classe vendas, inserindo os dados requisitados dos formulários HTML
   nova_vd = Vendas(nf=nf, data=data_br, empresa=empresa, vendedor=vendedor,cliente=cliente,produto=produto,estado=estado,valor=valor,valor_final=valor_final, parceiro=parceiro, rma=rma)
 
+  # Enviando e commitando os dados para o banco de dados
   db.session.add(nova_vd)
   db.session.commit()
 
@@ -92,19 +101,27 @@ def inserir():
 
 @app.route('/login')
 def login():
-
+  # Condicional que identifica se o usuário está logado
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return render_template('login.html')
   else: 
     return redirect('/')
 
- 
+@app.route('/novo-usuario')
+def novo_usuario():
+
+  return render_template('criar-novo-usuario.html')
+
+@app.route('/criar-novo-usuario', methods=['POST',])
+def criar_novo_usuario():
+  
 
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
-
+    # a variável usuario é atribuida o item do banco de dados filtrado pelo nome de usuário requisitado pelo HTML
     usuario = Usuarios.query.filter_by(nome_de_usuario=request.form['nome_de_usuario']).first()
 
+    # condicional, se usuário for existente, avaliando se a senha de usuário requisitado do HTML é o mesmo que o banco de dados
     if usuario:
         if request.form['senha_do_usuario'] == usuario.senha:
           session['usuario_logado'] = usuario.nome_de_usuario
@@ -114,6 +131,7 @@ def autenticar():
       flash('Usuário não logado!')
       return redirect('/login')
     
+
 @app.route('/alterar')
 def alterar():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
@@ -127,6 +145,7 @@ def alterar():
   vd_localizada.data = '-'.join(dt_bd)
 
   return render_template("alterar.html", venda=vd_localizada)
+
 
 @app.route('/alterar-bd', methods=['POST',])
 def alterar_bd():
@@ -154,13 +173,43 @@ def alterar_bd():
 
 @app.route('/abrir-rma', methods=['POST',])
 def abrir_rma():
-  nf_req_url = request.args.get('venda')
-  vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+  if 'usuario_logado' not in session or session['usuario_logado'] == None:
+    return redirect('/login')
+  
+  usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
-  vd_localizada.rma = True
+  if request.form['senha'] == usuario.senha:
 
-  db.session.add(vd_localizada)
-  db.session.commit()
+    nf_req_url = request.args.get('venda')
+    vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+
+    vd_localizada.rma = True
+
+    db.session.add(vd_localizada)
+    db.session.commit()
+  
+  flash('Senha incorreta ao abrir RMA, tente novamente !')
+
+  return redirect('/')
+
+@app.route('/excluir-rma', methods=['POST',])
+def excluir_rma():
+  if 'usuario_logado' not in session or session['usuario_logado'] == None:
+    return redirect('/login')
+  
+  usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
+
+  if request.form['senha'] == usuario.senha:
+
+    nf_req_url = request.args.get('venda')
+    vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+
+    vd_localizada.rma = False
+
+    db.session.add(vd_localizada)
+    db.session.commit()
+  
+  flash('Senha incorreta ao abrir RMA, tente novamente !')
 
   return redirect('/')
 
