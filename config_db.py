@@ -36,6 +36,7 @@ TABLES['Vendas'] = ('''
       `valor` float NOT NULL,
       `valor_final` float NOT NULL,
       `parceiro` varchar(40) NOT NULL,
+      `rma` BOOLEAN NOT NULL DEFAULT False,
       PRIMARY KEY (`nf`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;''')
 
@@ -75,10 +76,10 @@ for user in cursor.fetchall():
     print(user[1])
 
 # inserindo vendass
-vendas_sql = 'INSERT INTO vendas (nf, data, empresa, vendedor, cliente, produto, estado, valor, valor_final, parceiro) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+vendas_sql = 'INSERT INTO vendas (nf, data, empresa, vendedor, cliente, produto, estado, valor, valor_final, parceiro, rma) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 vendas = [
-      (1418, '06/05/2024', 6, 'Fabricio', 'MT4 TECNOLOGIA', 'Processador', 'SP', 3980.00, 3980.00, "--"),
-      (1394, '02/05/2024', 6, 'Fabricio', 'FUNDAÇÃO DE DESENVOLVIMENTO', 'HD', 'SP', 47520.00, 47520.00, '--'),
+      (1418, '06/05/2024', 6, 'Fabricio', 'MT4 TECNOLOGIA', 'Processador', 'SP', 3980.00, 3980.00, "--", False),
+      (1394, '02/05/2024', 6, 'Fabricio', 'FUNDAÇÃO DE DESENVOLVIMENTO', 'HD', 'SP', 47520.00, 47520.00, '--', False)
 ]
 cursor.executemany(vendas_sql, vendas)
 

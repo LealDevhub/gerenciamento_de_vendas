@@ -26,6 +26,7 @@ class Vendas(db.Model):
   valor = db.Column(db.Float, nullable=False)
   valor_final = db.Column(db.Float, nullable=False)
   parceiro = db.Column(db.String(40), nullable=False)
+  rma = db.Column(db.Boolean, nullable=False)
 
   def __repr__(self) :
     return '<Name %r>' % self.name
@@ -74,6 +75,7 @@ def inserir():
   valor = request.form['valor']
   valor_final = request.form['valor_final']
   parceiro = request.form['parceiro']
+  rma = False
 
   venda = Vendas.query.filter_by(nf=nf).first()
 
@@ -81,7 +83,7 @@ def inserir():
     flash('Jogo já existente')
     return redirect('/')
   
-  nova_vd = Vendas(nf=nf, data=data_br, empresa=empresa, vendedor=vendedor,cliente=cliente,produto=produto,estado=estado,valor=valor,valor_final=valor_final, parceiro=parceiro)
+  nova_vd = Vendas(nf=nf, data=data_br, empresa=empresa, vendedor=vendedor,cliente=cliente,produto=produto,estado=estado,valor=valor,valor_final=valor_final, parceiro=parceiro, rma=rma)
 
   db.session.add(nova_vd)
   db.session.commit()
@@ -146,6 +148,18 @@ def alterar_bd():
   venda.parceiro = request.form['parceiro']
 
   db.session.add(venda)
+  db.session.commit()
+
+  return redirect('/')
+
+@app.route('/abrir-rma', methods=['POST',])
+def abrir_rma():
+  nf_req_url = request.args.get('venda')
+  vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+
+  vd_localizada.rma = True
+
+  db.session.add(vd_localizada)
   db.session.commit()
 
   return redirect('/')
