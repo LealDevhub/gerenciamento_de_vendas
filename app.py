@@ -51,6 +51,8 @@ def index():
     # adiciona a uma variável "vendas" uma lista ordenada por meio das datas das vendas no banco de dados
     vendas = Vendas.query.order_by(Vendas.data)
 
+    print(vendas)
+
     # adiciona a uma variável "usuário" o item do banco da dados filtrado pelo nome de usuário 
     usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
@@ -159,7 +161,7 @@ def criar_novo_usuario():
       `parceiro` varchar(40) NOT NULL,
       `rma` BOOLEAN NOT NULL DEFAULT False,
       PRIMARY KEY (`nf`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;'''.format(nome_de_usuario))
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;'''.format(nome_de_usuario=nome_de_usuario))
   
   for tabela_nome in TABLES:
       tabela_sql = TABLES[tabela_nome]
