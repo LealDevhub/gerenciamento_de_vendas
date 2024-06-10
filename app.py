@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, session, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 
+import mysql.connector
+from mysql.connector import errorcode
 
 app = Flask(__name__)
 app.secret_key = 'vds_gpcit'
@@ -114,7 +116,66 @@ def novo_usuario():
 
 @app.route('/criar-novo-usuario', methods=['POST',])
 def criar_novo_usuario():
+
+  nome_de_usuario = request.form['nome_de_usuario']
+  nome = request.form['nome']
+  senha = request.form['senha_do_usuario']
+
+  print("Conectando...")
+  try:
+      conn = mysql.connector.connect(
+            host='127.0.0.1',
+            user='root',
+            
+      )
+  except mysql.connector.Error as err:
+      if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print('Existe algo errado no nome de usuário ou senha')
+      else:
+            print(err)
+
+  cursor = conn.cursor()
+
+  cursor.execute("USE `vendas_gpc`;")
+
+  usuario_sql = 'INSERT INTO usuarios (nome, nome_de_usuario, senha) VALUES (%s, %s, %s)'
+  usuarios = [
+      (nome, nome_de_usuario, senha),
+  ]
+  cursor.executemany(usuario_sql, usuarios)
+
+  TABLES = {}
+  TABLES['Vendas'] = ('''
+      CREATE TABLE `vendas_{nome_de_usuario}` (
+      `nf` int(11) NOT NULL,
+      `data` text NOT NULL,
+      `empresa` int(11) NOT NULL,
+      `vendedor` varchar(40) NOT NULL,
+      `cliente` varchar(150) NOT NULL,
+      `produto` varchar(200) NOT NULL,
+      `estado` varchar(20) NOT NULL,
+      `valor` float NOT NULL,
+      `valor_final` float NOT NULL,
+      `parceiro` varchar(40) NOT NULL,
+      `rma` BOOLEAN NOT NULL DEFAULT False,
+      PRIMARY KEY (`nf`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;'''.format(nome_de_usuario))
   
+  for tabela_nome in TABLES:
+      tabela_sql = TABLES[tabela_nome]
+      try:
+            print('Criando tabela {}:'.format(tabela_nome), end=' ')
+            cursor.execute(tabela_sql)
+      except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+                  print('Já existe')
+            else:
+                  print(err.msg)
+      else:
+            print('OK')
+
+  return redirect('/')
+
 
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
