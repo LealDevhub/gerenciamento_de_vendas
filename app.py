@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
       SGBD = 'mysql',
       usuario= 'root',
       servidor= 'localhost',
-      database= 'vendas_gpc'
+      database= 'vendas_{user_log}'.format(user_log=session['usuario_logado'])
     )
 
 db = SQLAlchemy(app)
@@ -32,7 +32,7 @@ except mysql.connector.Error as err:
 
 cursor = conn.cursor()
 
-cursor.execute("USE `vendas_gpc`;")
+cursor.execute("USE `vendas_{user_log}`;".format(user_log=session['usuario_logado']))
 
 class Vendas(db.Model):
   nf = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -148,9 +148,13 @@ def criar_novo_usuario():
   ]
   cursor.executemany(usuario_sql, usuarios)
 
+  cursor.execute("DROP DATABASE IF EXISTS `vendas_{nome_de_usuario}`;".format(nome_de_usuario=nome_de_usuario))
+
+  cursor.execute("CREATE DATABASE `vendas_{nome_de_usuario}`;".format(nome_de_usuario=nome_de_usuario))
+
   TABLES = {}
   TABLES['Vendas'] = ('''
-      CREATE TABLE `vendas_{nome_de_usuario}` (
+      CREATE TABLE `vendas` (
       `nf` int(11) NOT NULL,
       `data` text NOT NULL,
       `empresa` int(11) NOT NULL,
@@ -163,7 +167,7 @@ def criar_novo_usuario():
       `parceiro` varchar(40) NOT NULL,
       `rma` BOOLEAN NOT NULL DEFAULT False,
       PRIMARY KEY (`nf`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;'''.format(nome_de_usuario=nome_de_usuario))
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;''')
   
   for tabela_nome in TABLES:
       tabela_sql = TABLES[tabela_nome]
