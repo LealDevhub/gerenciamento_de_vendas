@@ -17,6 +17,23 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 
 db = SQLAlchemy(app)
 
+print("Conectando...")
+try:
+      conn = mysql.connector.connect(
+            host='127.0.0.1',
+            user='root',
+            
+      )
+except mysql.connector.Error as err:
+      if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print('Existe algo errado no nome de usuário ou senha')
+      else:
+            print(err)
+
+cursor = conn.cursor()
+
+cursor.execute("USE `vendas_gpc`;")
+
 class Vendas(db.Model):
   nf = db.Column(db.Integer, primary_key=True, nullable=False)
   data = db.Column(db.String(50), nullable=False)
@@ -48,10 +65,9 @@ def index():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   else:
+    
     # adiciona a uma variável "vendas" uma lista ordenada por meio das datas das vendas no banco de dados
     vendas = Vendas.query.order_by(Vendas.data)
-
-    print(vendas)
 
     # adiciona a uma variável "usuário" o item do banco da dados filtrado pelo nome de usuário 
     usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
@@ -89,6 +105,7 @@ def inserir():
   # adiciona a uma variável "venda" o item do banco da dados filtrado pelo numero da nf
   venda = Vendas.query.filter_by(nf=nf).first()
 
+
   # condicional se a venda já existir no banco de dados
   if venda:
     flash('Venda já existente')
@@ -123,22 +140,7 @@ def criar_novo_usuario():
   nome = request.form['nome']
   senha = request.form['senha_do_usuario']
 
-  print("Conectando...")
-  try:
-      conn = mysql.connector.connect(
-            host='127.0.0.1',
-            user='root',
-            
-      )
-  except mysql.connector.Error as err:
-      if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print('Existe algo errado no nome de usuário ou senha')
-      else:
-            print(err)
-
-  cursor = conn.cursor()
-
-  cursor.execute("USE `vendas_gpc`;")
+  
 
   usuario_sql = 'INSERT INTO usuarios (nome, nome_de_usuario, senha) VALUES (%s, %s, %s)'
   usuarios = [
