@@ -1,9 +1,6 @@
 from flask import Flask, render_template, request, session, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 
-import mysql.connector
-from mysql.connector import errorcode
-
 app = Flask(__name__)
 app.secret_key = 'vds_gpcit'
 
@@ -12,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
       SGBD = 'mysql',
       usuario= 'root',
       servidor= 'localhost',
-      database= 'vendas_gpc
+      database= 'vendas_gpc',
     )
 
 db = SQLAlchemy(app)
