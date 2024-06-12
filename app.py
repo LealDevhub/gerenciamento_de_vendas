@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
       SGBD = 'mysql',
       usuario= 'root',
       servidor= 'localhost',
-      database= 'vendas_{user_log}'.format(user_log=session['usuario_logado'])
+      database= 'vendas_'.format(user_log=session['usuario_logado'])
     )
 
 db = SQLAlchemy(app)
@@ -139,8 +139,6 @@ def criar_novo_usuario():
   nome_de_usuario = request.form['nome_de_usuario']
   nome = request.form['nome']
   senha = request.form['senha_do_usuario']
-
-  
 
   usuario_sql = 'INSERT INTO usuarios (nome, nome_de_usuario, senha) VALUES (%s, %s, %s)'
   usuarios = [

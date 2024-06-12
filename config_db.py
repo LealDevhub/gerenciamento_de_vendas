@@ -16,29 +16,14 @@ except mysql.connector.Error as err:
 
 cursor = conn.cursor()
 
-cursor.execute("DROP DATABASE IF EXISTS `vendas_gpc`;")
+cursor.execute("DROP DATABASE IF EXISTS `usuarios_gpc`;")
 
-cursor.execute("CREATE DATABASE `vendas_gpc`;")
+cursor.execute("CREATE DATABASE `usuarios_gpc`;")
 
-cursor.execute("USE `vendas_gpc`;")
+cursor.execute("USE `usuarios_gpc`;")
 
 # criando tabelas
 TABLES = {}
-TABLES['Vendas'] = ('''
-      CREATE TABLE `vendas` (
-      `nf` int(11) NOT NULL,
-      `data` text NOT NULL,
-      `empresa` int(11) NOT NULL,
-      `vendedor` varchar(40) NOT NULL,
-      `cliente` varchar(150) NOT NULL,
-      `produto` varchar(200) NOT NULL,
-      `estado` varchar(20) NOT NULL,
-      `valor` float NOT NULL,
-      `valor_final` float NOT NULL,
-      `parceiro` varchar(40) NOT NULL,
-      `rma` BOOLEAN NOT NULL DEFAULT False,
-      PRIMARY KEY (`nf`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;''')
 
 TABLES['Usuarios'] = ('''
       CREATE TABLE `usuarios` (
@@ -74,19 +59,6 @@ cursor.execute('select * from vendas_gpc.usuarios')
 print(' -------------  Usuários:  -------------')
 for user in cursor.fetchall():
     print(user[1])
-
-# inserindo vendass
-vendas_sql = 'INSERT INTO vendas (nf, data, empresa, vendedor, cliente, produto, estado, valor, valor_final, parceiro, rma) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
-vendas = [
-      (1418, '06/05/2024', 6, 'Fabricio', 'MT4 TECNOLOGIA', 'Processador', 'SP', 3980.00, 3980.00, "--", False),
-      (1394, '02/05/2024', 6, 'Fabricio', 'FUNDAÇÃO DE DESENVOLVIMENTO', 'HD', 'SP', 47520.00, 47520.00, '--', False)
-]
-cursor.executemany(vendas_sql, vendas)
-
-cursor.execute('select * from vendas_gpc.vendas')
-print(' -------------  Vendas:  -------------')
-for venda in cursor.fetchall():
-    print(venda[4])
 
 # commitando se não nada tem efeito
 conn.commit()
