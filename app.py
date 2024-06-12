@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, session, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 
+import mysql.connector
+from mysql.connector import errorcode
 
 app = Flask(__name__)
 app.secret_key = 'vds_gpcit'
@@ -10,10 +12,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
       SGBD = 'mysql',
       usuario= 'root',
       servidor= 'localhost',
-      database= 'vendas_gpc'
+      database= 'vendas_gpc
     )
 
 db = SQLAlchemy(app)
+
 
 class Vendas(db.Model):
   nf = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -46,6 +49,7 @@ def index():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   else:
+    
     # adiciona a uma variável "vendas" uma lista ordenada por meio das datas das vendas no banco de dados
     vendas = Vendas.query.order_by(Vendas.data)
 
@@ -84,6 +88,7 @@ def inserir():
 
   # adiciona a uma variável "venda" o item do banco da dados filtrado pelo numero da nf
   venda = Vendas.query.filter_by(nf=nf).first()
+
 
   # condicional se a venda já existir no banco de dados
   if venda:
