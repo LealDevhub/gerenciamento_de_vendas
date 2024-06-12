@@ -112,10 +112,6 @@ def novo_usuario():
 
   return render_template('criar-novo-usuario.html')
 
-@app.route('/criar-novo-usuario', methods=['POST',])
-def criar_novo_usuario():
-  
-
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
     # a variável usuario é atribuida o item do banco de dados filtrado pelo nome de usuário requisitado pelo HTML
