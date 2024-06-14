@@ -50,12 +50,11 @@ def index():
   else:
     
     # adiciona a uma variável "vendas" uma lista ordenada por meio das datas das vendas no banco de dados
-    vendas_ord = Vendas.query.order_by(Vendas.data)
 
     # adiciona a uma variável "usuário" o item do banco da dados filtrado pelo nome de usuário 
     usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
-    vendas = Vendas.query.filter_by(vendedor_id=usuario.id_user)
+    vendas = Vendas.query.filter_by(vendedor_id=usuario.id_user).order_by(Vendas.data)
 
     # renderiza o index, com atributos Nome, e envia a lista de vendas para o HTML
     return render_template('index.html', usuario=usuario.nome, vendas=vendas)
