@@ -20,6 +20,7 @@ class Vendas(db.Model):
   data = db.Column(db.String(50), nullable=False)
   empresa = db.Column(db.Integer, nullable=False)
   vendedor = db.Column(db.String(40), nullable=False)
+  vendedor_id = db.Column(db.String(40), nullable=False)
   cliente = db.Column(db.String(150), nullable=False)
   produto = db.Column(db.String(200), nullable=False)
   estado = db.Column(db.String(20), nullable=False)
@@ -33,7 +34,8 @@ class Vendas(db.Model):
   
 class Usuarios(db.Model):
   nome = db.Column(db.String(50), nullable=False)
-  nome_de_usuario = db.Column(db.String(20), primary_key=True, nullable=False)
+  id_user = db.Column(db.String(50), primary_key=True, nullable=False)
+  nome_de_usuario = db.Column(db.String(50), nullable=False)
   senha = db.Column(db.String(100), nullable=False)
   
 
@@ -48,10 +50,12 @@ def index():
   else:
     
     # adiciona a uma variável "vendas" uma lista ordenada por meio das datas das vendas no banco de dados
-    vendas = Vendas.query.order_by(Vendas.data)
+    vendas_ord = Vendas.query.order_by(Vendas.data)
 
     # adiciona a uma variável "usuário" o item do banco da dados filtrado pelo nome de usuário 
     usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
+
+    vendas = Vendas.query.filter_by(vendedor_id=usuario.id_user)
 
     # renderiza o index, com atributos Nome, e envia a lista de vendas para o HTML
     return render_template('index.html', usuario=usuario.nome, vendas=vendas)
