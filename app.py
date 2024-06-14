@@ -66,8 +66,9 @@ def nova_venda():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   else:
+    usuarios = Usuarios.query.order_by(Usuarios.nome)
     # renderiza o template de nova venda
-    return render_template('nova_venda.html')
+    return render_template('nova_venda.html', users=usuarios)
   
 # rota intermediária para inserir dados da app no Banco de dados
 @app.route('/inserir', methods=['POST',])
@@ -78,7 +79,11 @@ def inserir():
   # a data está sendo formatada para o modelo usado no Brasil
   data_br = '/'.join(dt_input)
   empresa = request.form['empresa']
-  vendedor = request.form['vendedor']
+  vendedor_id = request.form['ids-vendedor']
+
+  user = Usuarios.query.filter_by(id_user=vendedor_id).first()
+  vendedor_nome = user.nome
+
   cliente = request.form['cliente']
   produto = request.form['produto']
   estado = request.form['estado']
@@ -97,7 +102,7 @@ def inserir():
     return redirect('/')
   
   # variável nova_vd é atribuida uma instanciação da classe vendas, inserindo os dados requisitados dos formulários HTML
-  nova_vd = Vendas(nf=nf, data=data_br, empresa=empresa, vendedor=vendedor,cliente=cliente,produto=produto,estado=estado,valor=valor,valor_final=valor_final, parceiro=parceiro, rma=rma)
+  nova_vd = Vendas(nf=nf, data=data_br, empresa=empresa, vendedor=vendedor_nome, vendedor_id=vendedor_id,cliente=cliente,produto=produto,estado=estado,valor=valor,valor_final=valor_final, parceiro=parceiro, rma=rma)
 
   # Enviando e commitando os dados para o banco de dados
   db.session.add(nova_vd)

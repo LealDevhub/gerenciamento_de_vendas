@@ -247,13 +247,12 @@
         </div>
 
         <div class="form-floating">
-          <input
-            type="text"
-            class="form-control"
-            id="floatingPassword"
-            name="vendedor"
-          />
-          <label for="floatingPassword">Vendedor(es)</label>
+          <select name="ids-vendedor" id="ids-vendedor" class="form-control">
+            {% for user in users %}
+            <option value="{{ user.id_user }}">{{ user.nome }}</option>
+            {% endfor %}
+          </select>
+          <label for="ids-vendedor">Vendedor(es)</label>
         </div>
 
         <div class="form-floating">
