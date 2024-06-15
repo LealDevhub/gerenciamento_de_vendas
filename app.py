@@ -182,19 +182,21 @@ def abrir_rma():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   
+  nf_req_url = request.args.get('venda')
+  vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+
+  vd_localizada.rma = True
+
   usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
   if request.form['senha'] == usuario.senha:
 
-    nf_req_url = request.args.get('venda')
-    vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
-
-    vd_localizada.rma = True
 
     db.session.add(vd_localizada)
     db.session.commit()
-  
-  flash('Senha incorreta ao abrir RMA, tente novamente !')
+  else:
+    
+    flash('Senha incorreta ao abrir RMA, tente novamente !')
 
   return redirect('/')
 
@@ -203,19 +205,20 @@ def excluir_rma():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   
+
+  nf_req_url = request.args.get('venda')
+  vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+
+  vd_localizada.rma = False
+
   usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
   if request.form['senha'] == usuario.senha:
 
-    nf_req_url = request.args.get('venda')
-    vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
-
-    vd_localizada.rma = False
-
     db.session.add(vd_localizada)
     db.session.commit()
-  
-  flash('Senha incorreta ao abrir RMA, tente novamente !')
+  else:
+    flash('Senha incorreta ao abrir RMA, tente novamente !')
 
   return redirect('/')
 
