@@ -225,15 +225,15 @@
           <label for="floatingInput">Nome de Usuário</label>
         </div>
         <div class="form-floating">
-            <input
-              type="text"
-              class="form-control"
-              id="floatingInput"
-              name="nome"
-              placeholder="Nome Completo"
-            />
-            <label for="floatingInput">Nome Completo</label>
-          </div>
+          <input
+            type="text"
+            class="form-control"
+            id="floatingInput"
+            name="nome"
+            placeholder="Nome Completo"
+          />
+          <label for="floatingInput">Nome Completo</label>
+        </div>
         <div class="form-floating">
           <input
             type="password"
@@ -244,7 +244,17 @@
           />
           <label for="floatingPassword">Senha</label>
         </div>
-        <button class="btn btn-primary w-100 py-2 my-3" type="submit">Login</button>
+
+        <div class="form-floating">
+          <select name="supervisao" id="supervisao" class="form-control">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+          </select>
+          <label for="supervisao">Supervisiona?</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2 my-3" type="submit">
+          Cadastrar
+        </button>
         <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
       </form>
     </main>

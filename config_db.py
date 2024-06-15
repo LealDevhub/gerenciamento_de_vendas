@@ -47,6 +47,7 @@ TABLES['Usuarios'] = ('''
       `id_user` varchar(50) NOT NULL,
       `nome_de_usuario` varchar(20) NOT NULL,
       `senha` varchar(100) NOT NULL,
+      `supervisor` BOOLEAN NOT NULL DEFAULT False,
       PRIMARY KEY (`id_user`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;''')
 
@@ -64,11 +65,11 @@ for tabela_nome in TABLES:
             print('OK')
 
 # inserindo usuarios
-usuario_sql = 'INSERT INTO usuarios (nome, id_user, nome_de_usuario, senha) VALUES (%s,%s, %s, %s)'
+usuario_sql = 'INSERT INTO usuarios (nome, id_user, nome_de_usuario, senha, supervisor) VALUES (%s,%s, %s, %s, %s)'
 usuarios = [
-      ("Fabricio Pereira", "102030", "lealdev", "alohomora"),
-      ("Camila Ferreira", "574963", "Mila", "paozinho"),
-      ("Gabriella Teixeira", "849327","Gabis", "python_eh_vida")
+      ("Fabricio Pereira", "102030", "lealdev", "alohomora", False),
+      ("Camila Ferreira", "574963", "Mila", "paozinho", False),
+      ("Gabriella Teixeira", "849327","Gabis", "python_eh_vida", False)
 ]
 cursor.executemany(usuario_sql, usuarios)
 

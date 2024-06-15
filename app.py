@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, session, flash, redirect
+from flask import Flask, render_template, request, session, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+import string
+import random
 
 app = Flask(__name__)
 app.secret_key = 'vds_gpcit'
@@ -37,6 +39,7 @@ class Usuarios(db.Model):
   id_user = db.Column(db.String(50), primary_key=True, nullable=False)
   nome_de_usuario = db.Column(db.String(50), nullable=False)
   senha = db.Column(db.String(100), nullable=False)
+  supervisor = db.Column(db.Boolean, nullable=False)
   
 
   def __repr__(self) :
@@ -48,16 +51,19 @@ def index():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   else:
-    
-    # adiciona a uma variável "vendas" uma lista ordenada por meio das datas das vendas no banco de dados
-
     # adiciona a uma variável "usuário" o item do banco da dados filtrado pelo nome de usuário 
     usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
-    vendas = Vendas.query.filter_by(vendedor_id=usuario.id_user).order_by(Vendas.data)
+    if usuario.supervisor == 1:
+      vendas = Vendas.query.order_by(Vendas.data)
+    else:
+
+      # adiciona a uma variável "vendas" uma lista de vendas filtrada pelo id do usuário ordenada por meio das datas das vendas no banco de dados
+      vendas = Vendas.query.filter_by(vendedor_id=usuario.id_user).order_by(Vendas.data)
 
     # renderiza o index, com atributos Nome, e envia a lista de vendas para o HTML
-    return render_template('index.html', usuario=usuario.nome, vendas=vendas)
+    return render_template('index.html', usuario=usuario.nome,
+    supervisor=usuario.supervisor , vendas=vendas)
 
 @app.route('/nova-venda')
 def nova_venda():
@@ -65,6 +71,7 @@ def nova_venda():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   else:
+    # a variárel usuários oferece uma lista com o nome dos vendedores para o HTML
     usuarios = Usuarios.query.order_by(Usuarios.nome)
     # renderiza o template de nova venda
     return render_template('nova_venda.html', users=usuarios)
@@ -80,7 +87,9 @@ def inserir():
   empresa = request.form['empresa']
   vendedor_id = request.form['ids-vendedor']
 
+  #A variáriel user localiza no banco de dados "usuarios" o id do vendedor enviado pelo HTML
   user = Usuarios.query.filter_by(id_user=vendedor_id).first()
+  # A variável vendedor_nome recebe o nome do id do usuário localizado anteriormente
   vendedor_nome = user.nome
 
   cliente = request.form['cliente']
@@ -115,12 +124,32 @@ def login():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return render_template('login.html')
   else: 
-    return redirect('/')
+    return redirect(url_for('index'))
 
 @app.route('/novo-usuario')
 def novo_usuario():
 
   return render_template('criar-novo-usuario.html')
+
+@app.route('/criar-novo-usuario', methods=['POST',])
+def criar_novo_usuario():
+  nome_de_usuario = request.form['nome_de_usuario']
+  nome = request.form['nome']
+  senha = request.form['senha_do_usuario']
+  supervisao = request.form['supervisao']
+  alfabeto = string.ascii_lowercase
+  numeros = '123456789'
+  combinar = alfabeto + numeros
+  comprimento = 6
+
+  id_user = ''.join(random.sample(combinar, comprimento))
+
+  novo_usuario = Usuarios(nome = nome, id_user = id_user, senha=senha, nome_de_usuario=nome_de_usuario, supervisor= bool(supervisao) )
+
+  db.session.add(novo_usuario)
+  db.session.commit()
+
+  return redirect(url_for('index'))
 
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
@@ -132,7 +161,7 @@ def autenticar():
         if request.form['senha_do_usuario'] == usuario.senha:
           session['usuario_logado'] = usuario.nome_de_usuario
           flash(usuario.nome_de_usuario + "logado com sucesso")
-          return redirect('/')
+          return redirect(url_for('index'))
     else:
       flash('Usuário não logado!')
       return redirect('/login')
@@ -141,7 +170,7 @@ def autenticar():
 @app.route('/alterar')
 def alterar():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return redirect('/login')
+    return redirect(url_for('login'))
   
   nf_req_url = request.args.get('venda')
   vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
@@ -175,7 +204,7 @@ def alterar_bd():
   db.session.add(venda)
   db.session.commit()
 
-  return redirect('/')
+  return redirect(url_for('index'))
 
 @app.route('/abrir-rma', methods=['POST',])
 def abrir_rma():
@@ -198,7 +227,7 @@ def abrir_rma():
     
     flash('Senha incorreta ao abrir RMA, tente novamente !')
 
-  return redirect('/')
+  return redirect(url_for('index'))
 
 @app.route('/excluir-rma', methods=['POST',])
 def excluir_rma():
@@ -220,7 +249,7 @@ def excluir_rma():
   else:
     flash('Senha incorreta ao abrir RMA, tente novamente !')
 
-  return redirect('/')
+  return redirect(url_for('index'))
 
 @app.route('/excluir', methods=['POST'],)
 def excluir():
@@ -236,17 +265,16 @@ def excluir():
 
     db.session.delete(vd_localizada)
     db.session.commit()
-
-    return redirect('/')
   else:
     flash('Senha incorreta ao excluir, tente novamente !')
 
-  return redirect('/')
-  
+  return redirect(url_for('index'))
+
+
 @app.route('/logout')
 def logout():
   session['usuario_logado'] = None
   flash('Logout efetuado com sucesso!')
-  return redirect('/login')
+  return redirect(url_for('login'))
 
 app.run(debug=True)
