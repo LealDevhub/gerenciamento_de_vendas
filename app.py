@@ -74,7 +74,7 @@ def nova_venda():
     # a variárel usuários oferece uma lista com o nome dos vendedores para o HTML
     usuarios = Usuarios.query.order_by(Usuarios.nome)
     # renderiza o template de nova venda
-    return render_template('nova_venda.html', users=usuarios)
+    return render_template('nova_venda.html', users=usuarios, titulo="Nova venda - Gerenciamento de vendas")
   
 # rota intermediária para inserir dados da app no Banco de dados
 @app.route('/inserir', methods=['POST',])
@@ -122,14 +122,14 @@ def inserir():
 def login():
   # Condicional que identifica se o usuário está logado
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return render_template('login.html')
+    return render_template('login.html', titulo="Login - Gerenciamento de vendas")
   else: 
     return redirect(url_for('index'))
 
 @app.route('/novo-usuario')
 def novo_usuario():
 
-  return render_template('criar-novo-usuario.html')
+  return render_template('criar-novo-usuario.html', titulo="Cadastrar novo usuário - Gerenciamento de vendas")
 
 @app.route('/criar-novo-usuario', methods=['POST',])
 def criar_novo_usuario():
@@ -162,9 +162,12 @@ def autenticar():
           session['usuario_logado'] = usuario.nome_de_usuario
           flash(usuario.nome_de_usuario + "logado com sucesso")
           return redirect(url_for('index'))
+        else:
+          flash('Senha incorreta')
     else:
       flash('Usuário não logado!')
-      return redirect('/login')
+    
+    return redirect('/login')
     
 
 @app.route('/alterar')
@@ -179,15 +182,13 @@ def alterar():
   dt_bd.reverse()
   vd_localizada.data = '-'.join(dt_bd)
 
-  return render_template("alterar.html", venda=vd_localizada)
+  return render_template("alterar.html", venda=vd_localizada, titulo="Alterar venda - Gerenciamento de vendas")
 
 
 @app.route('/alterar-bd', methods=['POST',])
 def alterar_bd():
-
   nf = request.form['nf']
   venda = Vendas.query.filter_by(nf=nf).first()
-
   venda.nf = nf
   dt_input = request.form['data'].split('-')
   dt_input.reverse()
@@ -213,14 +214,11 @@ def abrir_rma():
   
   nf_req_url = request.args.get('venda')
   vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
-
   vd_localizada.rma = True
 
   usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
   if request.form['senha'] == usuario.senha:
-
-
     db.session.add(vd_localizada)
     db.session.commit()
   else:
@@ -234,16 +232,13 @@ def excluir_rma():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
   
-
   nf_req_url = request.args.get('venda')
   vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
-
   vd_localizada.rma = False
 
   usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
   if request.form['senha'] == usuario.senha:
-
     db.session.add(vd_localizada)
     db.session.commit()
   else:
@@ -262,7 +257,6 @@ def excluir():
   usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
   if request.form['senha'] == usuario.senha:
-
     db.session.delete(vd_localizada)
     db.session.commit()
   else:
