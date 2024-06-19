@@ -1,10 +1,18 @@
-var btnExport = document.querySelector('#btnExport')
+$(document).ready(function () {
+  $('#btnExport').click(function (e) {
+    e.preventDefault()
 
-btnExport.onclick = () => exportData('xlsx')
+    var DivTabela = document.querySelector('#divTabela')
+    var dados = new Blob(['\ufeff' + DivTabela.outerHTML], {
+      type: 'application/vnd.ms-excel'
+    })
+    var url = window.URL.createObjectURL(dados)
 
-function exportData(type) {
-  const fileName = 'exported-table.' + type
-  const table = document.querySelector('#table')
-  const wb = XLSX.utils.table_to_book(table)
-  XLSX.writeFile(wb, fileName)
-}
+    var a = document.createElement('a')
+
+    a.href = url
+    a.download = 'export-table'
+
+    a.click()
+  })
+})

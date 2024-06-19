@@ -552,7 +552,7 @@
           ></canvas>
 
           <h2>Vendas</h2>
-          <div class="table-responsive small">
+          <div id="divTabela" class="table-responsive small">
             <table id="table" class="table table-striped table-sm">
               <thead>
                 <tr>
@@ -623,159 +623,144 @@
                     {% endif %}
                   </td>
                 </tr>
-
-                <div id="JanelaModal{{ venda.nf }}" class="modal fade">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <form
-                        action="/excluir?venda={{ venda.nf }}"
-                        method="post"
-                      >
-                        <div class="modal-header">
-                          <h3 class="modal-title">
-                            Tem certeza que deseja excluir?
-                          </h3>
-                          <button
-                            type="button"
-                            class="btn btn-close"
-                            data-bs-dismiss="modal"
-                          ></button>
-                        </div>
-
-                        <div class="modal-body">
-                          <div class="form-floating">
-                            <input
-                              type="password"
-                              class="form-control"
-                              id="floatingPassword"
-                              name="senha"
-                              placeholder="Digite sua senha"
-                            />
-                            <label for="floatingPassword"
-                              >Digite sua senha</label
-                            >
-                          </div>
-                        </div>
-
-                        <div class="modal-footer">
-                          <button type="submit" class="btn">
-                            Sim, tenho certeza
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-danger"
-                            data-bs-dismiss="modal"
-                          >
-                            Fechar
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-
-                <div id="JanelaRma{{ venda.nf }}" class="modal fade">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <form
-                        action="/abrir-rma?venda={{ venda.nf }}"
-                        method="post"
-                      >
-                        <div class="modal-header">
-                          <h3 class="modal-title">
-                            Tem certeza que deseja abrir RMA?
-                          </h3>
-                          <button
-                            type="button"
-                            class="btn btn-close"
-                            data-bs-dismiss="modal"
-                          ></button>
-                        </div>
-
-                        <div class="modal-body">
-                          <div class="form-floating">
-                            <input
-                              type="password"
-                              class="form-control"
-                              id="floatingPassword"
-                              name="senha"
-                              placeholder="Digite sua senha"
-                            />
-                            <label for="floatingPassword"
-                              >Digite sua senha</label
-                            >
-                          </div>
-                        </div>
-
-                        <div class="modal-footer">
-                          <button type="submit" class="btn">
-                            Sim, tenho certeza
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-danger"
-                            data-bs-dismiss="modal"
-                          >
-                            Fechar
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <div id="JanelaExcluirRma{{ venda.nf }}" class="modal fade">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <form
-                        action="/excluir-rma?venda={{ venda.nf }}"
-                        method="post"
-                      >
-                        <div class="modal-header">
-                          <h3 class="modal-title">
-                            Tem certeza que deseja excluir RMA?
-                          </h3>
-                          <button
-                            type="button"
-                            class="btn btn-close"
-                            data-bs-dismiss="modal"
-                          ></button>
-                        </div>
-
-                        <div class="modal-body">
-                          <div class="form-floating">
-                            <input
-                              type="password"
-                              class="form-control"
-                              id="floatingPassword"
-                              name="senha"
-                              placeholder="Digite sua senha"
-                            />
-                            <label for="floatingPassword"
-                              >Digite sua senha</label
-                            >
-                          </div>
-                        </div>
-
-                        <div class="modal-footer">
-                          <button type="submit" class="btn">
-                            Sim, tenho certeza
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-danger"
-                            data-bs-dismiss="modal"
-                          >
-                            Fechar
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
                 {% endfor %}
               </tbody>
             </table>
           </div>
+
+          {% for venda in vendas %}
+          <div id="JanelaModal{{ venda.nf }}" class="modal fade">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/excluir?venda={{ venda.nf }}" method="post">
+                  <div class="modal-header">
+                    <h3 class="modal-title">Tem certeza que deseja excluir?</h3>
+                    <button
+                      type="button"
+                      class="btn btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="floatingPassword"
+                        name="senha"
+                        placeholder="Digite sua senha"
+                      />
+                      <label for="floatingPassword">Digite sua senha</label>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="submit" class="btn">
+                      Sim, tenho certeza
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      data-bs-dismiss="modal"
+                    >
+                      Fechar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div id="JanelaRma{{ venda.nf }}" class="modal fade">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/abrir-rma?venda={{ venda.nf }}" method="post">
+                  <div class="modal-header">
+                    <h3 class="modal-title">
+                      Tem certeza que deseja abrir RMA?
+                    </h3>
+                    <button
+                      type="button"
+                      class="btn btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="floatingPassword"
+                        name="senha"
+                        placeholder="Digite sua senha"
+                      />
+                      <label for="floatingPassword">Digite sua senha</label>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="submit" class="btn">
+                      Sim, tenho certeza
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      data-bs-dismiss="modal"
+                    >
+                      Fechar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div id="JanelaExcluirRma{{ venda.nf }}" class="modal fade">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/excluir-rma?venda={{ venda.nf }}" method="post">
+                  <div class="modal-header">
+                    <h3 class="modal-title">
+                      Tem certeza que deseja excluir RMA?
+                    </h3>
+                    <button
+                      type="button"
+                      class="btn btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="floatingPassword"
+                        name="senha"
+                        placeholder="Digite sua senha"
+                      />
+                      <label for="floatingPassword">Digite sua senha</label>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="submit" class="btn">
+                      Sim, tenho certeza
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      data-bs-dismiss="modal"
+                    >
+                      Fechar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </main>
       </div>
     </div>
@@ -799,7 +784,7 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="../static/export-table/sheet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="../static/export-table/export-table.js"></script>
     <script src="../static/dashboard/dashboard.js"></script>
   </body>
