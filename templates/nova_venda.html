@@ -32,7 +32,7 @@
     </div>
 
     <div class="form-floating">
-      <select name="ids-vendedor" id="ids-vendedor" class="form-control">
+      <select name="ids-vendedor" id="ids-vendedor" class="form-select">
         {% for user in users %}
         <option value="{{ user.id_user }}">{{ user.nome }}</option>
         {% endfor %}

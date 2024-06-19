@@ -1,7 +1,7 @@
 {% extends "template-form.html" %} {% block conteudo %}
 
 <main class="form-signin w-100 m-auto">
-  <form method="post" action="/alterar-bd">
+  <form method="post" action="/alterar-venda-bd?nf={{ venda.nf }}">
     <h1 class="h3 mb-3 fw-normal">Alterar venda</h1>
 
     <div class="form-floating">

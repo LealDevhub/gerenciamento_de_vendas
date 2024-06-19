@@ -1,6 +1,9 @@
 {% extends "template-form.html" %} {% block conteudo %}
 <main class="form-signin w-100 m-auto">
-  <form method="post" action="/criar-novo-usuario">
+  <form
+    method="post"
+    action="/alterar-cadastro-bd?usuario={{ usuario.id_user }}"
+  >
     <h1 class="h3 mb-3 fw-normal">{{ header_title }}</h1>
 
     <div class="form-floating">
@@ -10,6 +13,7 @@
         id="floatingInput"
         name="nome_de_usuario"
         placeholder="Nome de Usuário"
+        value="{{ usuario.nome_de_usuario }}"
       />
       <label for="floatingInput">Nome de Usuário</label>
     </div>
@@ -20,6 +24,7 @@
         id="floatingInput"
         name="nome"
         placeholder="Nome Completo"
+        value="{{ usuario.nome }}"
       />
       <label for="floatingInput">Nome Completo</label>
     </div>
@@ -30,19 +35,25 @@
         id="floatingPassword"
         name="senha_do_usuario"
         placeholder="Senha"
+        value="{{ usuario.senha }}"
       />
       <label for="floatingPassword">Senha</label>
     </div>
 
     <div class="form-floating">
       <select name="supervisao" id="supervisao" class="form-select">
+        {% if usuario.supervisor == 1 %}
+        <option value="1">Sim</option>
+        <option value="0">Não</option>
+        {% else %}
         <option value="0">Não</option>
         <option value="1">Sim</option>
+        {% endif %}
       </select>
       <label for="supervisao">Supervisiona?</label>
     </div>
     <button class="btn btn-primary w-100 py-2 my-3" type="submit">
-      Cadastrar
+      Alterar
     </button>
     <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
   </form>

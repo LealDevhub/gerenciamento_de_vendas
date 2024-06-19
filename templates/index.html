@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
+<html lang="pt-BR" data-bs-theme="auto">
   <head>
     <script src="../static/assets/js/color-modes.js"></script>
 
@@ -425,13 +425,40 @@
                     Cadastrar novo usuário
                   </a>
                 </li>
-                {% endif %}
-                <li class="nav-item">
-                  <a class="nav-link d-flex align-items-center gap-2" href="#">
-                    <svg class="bi"><use xlink:href="#graph-up" /></svg>
-                    Reports
-                  </a>
+
+                <li class="nav-item dropdown">
+                  <button
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    class="nav-link d-flex align-items-center dropdown-toggle gap-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-file-earmark-break"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M14 4.5V9h-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v7H2V2a2 2 0 0 1 2-2h5.5zM13 12h1v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2h1v2a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1zM.5 10a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1z"
+                      />
+                    </svg>
+                    Alterar cadastro
+                  </button>
+                  <ul class="dropdown-menu">
+                    {% for usuario in usuarios %}
+                    <li>
+                      <a
+                        href="/alterar-cadastro?usuario={{ usuario.id_user }}"
+                        class="dropdown-item"
+                        >{{ usuario.nome }}</a
+                      >
+                    </li>
+                    {% endfor %}
+                  </ul>
                 </li>
+                {% endif %}
                 <li class="nav-item">
                   <a class="nav-link d-flex align-items-center gap-2" href="#">
                     <svg class="bi"><use xlink:href="#puzzle" /></svg>
@@ -598,7 +625,7 @@
                       Excluir
                     </button>
                     <a
-                      href="/alterar?venda={{ venda.nf }}"
+                      href="/alterar-venda?venda={{ venda.nf }}"
                       class="btn btn-warning"
                       >Alterar</a
                     >
@@ -632,7 +659,10 @@
           <div id="JanelaModal{{ venda.nf }}" class="modal fade">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/excluir?venda={{ venda.nf }}" method="post">
+                <form
+                  action="/excluir-venda?venda={{ venda.nf }}"
+                  method="post"
+                >
                   <div class="modal-header">
                     <h3 class="modal-title">Tem certeza que deseja excluir?</h3>
                     <button
