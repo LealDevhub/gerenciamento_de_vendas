@@ -48,34 +48,43 @@ class Usuarios(db.Model):
 
 @app.route('/')
 def index():
+  usuario_exist = Usuarios.query.all()
+  if usuario_exist:
   # Condicional que identifica se o usuário está logado
-  if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return redirect('/login')
-  else:
-    # adiciona a uma variável "usuário" o item do banco da dados filtrado pelo nome de usuário 
-    usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
-
-    if usuario.supervisor == 1:
-      vendas = Vendas.query.order_by(Vendas.data)
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+      return redirect('/login')
     else:
-      # adiciona a uma variável "vendas" uma lista de vendas filtrada pelo id do usuário ordenada por meio das datas das vendas no banco de dados
-      vendas = Vendas.query.filter_by(vendedor_id=usuario.id_user).order_by(Vendas.data)
+      # adiciona a uma variável "usuário" o item do banco da dados filtrado pelo nome de usuário 
+      usuario = Usuarios.query.filter_by(nome_de_usuario=session['usuario_logado']).first()
 
-    usuarios = Usuarios.query.order_by(Usuarios.nome)
-    # renderiza o index, com atributos Nome, e envia a lista de vendas para o HTML
-    return render_template('index.html', usuario=usuario.nome,
-    supervisor=usuario.supervisor , vendas=vendas, usuarios=usuarios)
+      if usuario.supervisor == 1:
+        vendas = Vendas.query.order_by(Vendas.data)
+      else:
+        # adiciona a uma variável "vendas" uma lista de vendas filtrada pelo id do usuário ordenada por meio das datas das vendas no banco de dados
+        vendas = Vendas.query.filter_by(vendedor_id=usuario.id_user).order_by(Vendas.data)
+
+      usuarios = Usuarios.query.order_by(Usuarios.nome)
+      # renderiza o index, com atributos Nome, e envia a lista de vendas para o HTML
+      return render_template('index.html', usuario=usuario.nome,
+      supervisor=usuario.supervisor , vendas=vendas, usuarios=usuarios)
+  
+  else:
+    return render_template('criar-novo-usuario.html', header_title='Cadastrar novo usuário',titulo="Cadastrar novo usuário - Gerenciamento de vendas")
 
 @app.route('/nova-venda')
 def nova_venda():
+  usuario_exist = Usuarios.query.all()
+  if usuario_exist:
   # Condicional que identifica se o usuário está logado
-  if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return redirect('/login')
-  else:
-    # a variárel usuários oferece uma lista com o nome dos vendedores para o HTML
-    usuarios = Usuarios.query.order_by(Usuarios.nome)
-    # renderiza o template de nova venda
-    return render_template('nova_venda.html', users=usuarios, titulo="Nova venda - Gerenciamento de vendas")
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+      return redirect('/login')
+    else:
+      # a variárel usuários oferece uma lista com o nome dos vendedores para o HTML
+      usuarios = Usuarios.query.order_by(Usuarios.nome)
+      # renderiza o template de nova venda
+      return render_template('nova_venda.html', users=usuarios, titulo="Nova venda - Gerenciamento de vendas")
+  
+  return redirect(url_for('index'))
 # rota intermediária para inserir dados da app no Banco de dados
 @app.route('/inserir', methods=['POST',])
 def inserir():
@@ -122,24 +131,27 @@ def inserir():
 
 @app.route('/login')
 def login():
+  usuario_exist = Usuarios.query.all()
+  if usuario_exist:
   # Condicional que identifica se o usuário está logado
-  if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return render_template('login.html', titulo="Login - Gerenciamento de vendas")
-  else: 
-    return redirect(url_for('index'))
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+      return render_template('login.html', titulo="Login - Gerenciamento de vendas")
+    else: 
+      return redirect(url_for('index'))
+  return redirect(url_for('index'))
 
 @app.route('/novo-usuario')
 def novo_usuario():
-  if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return redirect('/login')
+  usuario_exist = Usuarios.query.all()
+  if usuario_exist:
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+      return redirect('/login')
 
-  return render_template('criar-novo-usuario.html', header_title='Cadastrar novo usuário',titulo="Cadastrar novo usuário - Gerenciamento de vendas")
+    return render_template('criar-novo-usuario.html', header_title='Cadastrar novo usuário',titulo="Cadastrar novo usuário - Gerenciamento de vendas")
+  return redirect(url_for('index'))
 
 @app.route('/criar-novo-usuario', methods=['POST',])
 def criar_novo_usuario():
-  if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return redirect('/login')
-
   nome_de_usuario = request.form['nome_de_usuario']
   nome = request.form['nome']
   senha = request.form['senha_do_usuario']
@@ -162,13 +174,16 @@ def criar_novo_usuario():
 
 @app.route('/alterar-cadastro')
 def alterar_cadastro():
-  if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return redirect('/login')
+  usuario_exist = Usuarios.query.all()
+  if usuario_exist:
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+      return redirect('/login')
 
-  user_id = request.args.get('usuario')
-  usuario = Usuarios.query.filter_by(id_user=user_id).first()
+    user_id = request.args.get('usuario')
+    usuario = Usuarios.query.filter_by(id_user=user_id).first()
 
-  return render_template('alterar-cadastro.html', titulo="Alterar cadastro - Gerenciamento de vendas", header_title='Alterar cadastro de usuário', usuario=usuario)
+    return render_template('alterar-cadastro.html', titulo="Alterar cadastro - Gerenciamento de vendas", header_title='Alterar cadastro de usuário', usuario=usuario)
+  return redirect(url_for('index'))
 
 @app.route('/alterar-cadastro-bd', methods=['POST',])
 def alterar_cadastro_bd():
@@ -198,8 +213,7 @@ def alterar_cadastro_bd():
 
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
-    if 'usuario_logado' not in session or session['usuario_logado'] == None:
-      return redirect('/login')
+    
     # a variável usuario é atribuida o item do banco de dados filtrado pelo nome de usuário requisitado pelo HTML
     usuario = Usuarios.query.filter_by(nome_de_usuario=request.form['nome_de_usuario']).first()
 
@@ -218,17 +232,20 @@ def autenticar():
     
 @app.route('/alterar-venda')
 def alterar():
-  if 'usuario_logado' not in session or session['usuario_logado'] == None:
-    return redirect(url_for('login'))
-  
-  nf_req_url = request.args.get('venda')
-  vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
+  usuario_exist = Usuarios.query.all()
+  if usuario_exist:
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+      return redirect(url_for('login'))
+    
+    nf_req_url = request.args.get('venda')
+    vd_localizada = Vendas.query.filter_by(nf=nf_req_url).first()
 
-  dt_bd = vd_localizada.data.split('/')
-  dt_bd.reverse()
-  vd_localizada.data = '-'.join(dt_bd)
+    dt_bd = vd_localizada.data.split('/')
+    dt_bd.reverse()
+    vd_localizada.data = '-'.join(dt_bd)
 
-  return render_template("alterar.html", venda=vd_localizada, titulo="Alterar venda - Gerenciamento de vendas")
+    return render_template("alterar.html", venda=vd_localizada, titulo="Alterar venda - Gerenciamento de vendas")
+  return redirect(url_for('index'))
 
 @app.route('/alterar-venda-bd', methods=['POST',])
 def alterar_bd():

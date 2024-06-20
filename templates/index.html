@@ -833,12 +833,13 @@
                       <label for="dest" class="col-form-label"
                         >Recipient:</label
                       >
-                      <select name="destinatario" id="dest" class="form-select">
-                        {% for usuario in usuarios %}
-                        <option value="{{ usuario.id_user }}">
+                      <select name="destinatario" class="dest form-select">
+                        {% for usuario in usuarios %} {% if usuario.supervisor
+                        == 1 %}
+                        <option value="{{ usuario.telefone }}">
                           {{ usuario.nome }}
                         </option>
-                        {% endfor %}
+                        {% endif %} {% endfor %}
                       </select>
                     </div>
 
@@ -846,11 +847,14 @@
                       <label for="vendas" class="col-form-label"
                         >Escolha a venda:</label
                       >
-                      <select name="vendas" id="vendas" class="form-select">
+                      <select name="vendas" class="vendas form-select">
                         {% for venda in vendas %}
-                        <option value="{{ venda.nf }}">
-                          NF {{ venda.nf }} - {{ venda.cliente }} - {{
-                          venda.data }}
+                        <option
+                          value="{{ venda.nf }} - {{ venda.empresa }} - {{ venda.cliente }} - {{
+                          venda.data }}"
+                        >
+                          NF {{ venda.nf }}/{{ venda.empresa }} - {{
+                          venda.cliente }} - {{ venda.data }}
                         </option>
                         {% endfor %}
                       </select>
@@ -860,19 +864,19 @@
                       <label for="recipient-name" class="col-form-label"
                         >Prazo informado:</label
                       >
-                      <select name="prazo" id="prazo" class="form-select">
-                        <option value="">2-3 dias</option>
-                        <option value="">2-3 dias úteis</option>
-                        <option value="">5 dias</option>
-                        <option value="">5 dias úteis</option>
-                        <option value="">7 dias</option>
-                        <option value="">7 dias úteis</option>
-                        <option value="">10 dias</option>
-                        <option value="">10 dias úteis</option>
-                        <option value="">15 dias</option>
-                        <option value="">15 dias úteis</option>
-                        <option value="">20 dias</option>
-                        <option value="">20 dias úteis</option>
+                      <select name="prazo" class="prazo form-select">
+                        <option value="2-3 dias">2-3 dias</option>
+                        <option value="2-3 dias úteis">2-3 dias úteis</option>
+                        <option value="5 dias">5 dias</option>
+                        <option value="5 dias úteis">5 dias úteis</option>
+                        <option value="7 dias">7 dias</option>
+                        <option value="7 dias úteis">7 dias úteis</option>
+                        <option value="10 dias">10 dias</option>
+                        <option value="10 dias úteis">10 dias úteis</option>
+                        <option value="15 dias">15 dias</option>
+                        <option value="15 dias úteis">15 dias úteis</option>
+                        <option value="20 dias">20 dias</option>
+                        <option value="20 dias úteis">20 dias úteis</option>
                       </select>
                     </div>
 
@@ -883,9 +887,37 @@
                       <input
                         type="date"
                         name="data-final"
-                        id="data-final"
-                        class="form-control"
+                        class="data-final form-control"
                       />
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="data-final" class="col-form-label"
+                        >P/N (Part Number)</label
+                      >
+                      <input
+                        type="text"
+                        name="part-number"
+                        class="part-number form-control"
+                      />
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="data-final" class="col-form-label"
+                        >Qtd:</label
+                      >
+                      <input
+                        type="number"
+                        name="qtd"
+                        class="qtd form-control"
+                      />
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="data-final" class="col-form-label"
+                        >Obs:</label
+                      >
+                      <textarea name="obs" class="obs form-control"></textarea>
                     </div>
                   </div>
                   <div class="modal-footer">
@@ -896,7 +928,11 @@
                     >
                       Close
                     </button>
-                    <button type="button" class="btn btn-primary">
+                    <button
+                      onclick="createUrl()"
+                      type="button"
+                      class="btn btn-primary"
+                    >
                       Send message
                     </button>
                   </div>
@@ -930,6 +966,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="../static/export-table/export-table.js"></script>
+    <script src="../static/send-notification.js"></script>
     <script src="../static/dashboard/dashboard.js"></script>
   </body>
 </html>

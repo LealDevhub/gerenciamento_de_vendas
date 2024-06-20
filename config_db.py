@@ -67,19 +67,19 @@ for tabela_nome in TABLES:
             print('OK')
 
 # inserindo usuarios
-usuario_sql = 'INSERT INTO usuarios (nome, id_user, nome_de_usuario, senha, supervisor, email, telefone) VALUES (%s,%s, %s, %s, %s,%s,%s)'
-usuarios = [
-      ("Fabricio Pereira", "102030", "lealdev", "alohomora", False, "fabricio@gpcit.com.br", "+5511948765742"),
-      ("Camila Ferreira", "574963", "Mila", "paozinho", False, "camila@gpcit.com.br", "+5511965820350"),
-      ("Gabriella Teixeira", "849327","Gabis", "python_eh_vida", False, "gabriella@gpcit.com.br", "+5511983290279"),
-      ("Danielle Ambrósio", "xywqta", "Danis", "574242", True, "danielle@gpcit.com.br", "+5511979581481")
-]
-cursor.executemany(usuario_sql, usuarios)
+#usuario_sql = 'INSERT INTO usuarios (nome, id_user, nome_de_usuario, senha, supervisor, email, telefone) VALUES (%s,%s, %s, %s, %s,%s,%s)'
+#usuarios = [
+ #     ("Fabricio Pereira", "102030", "lealdev", "alohomora", False, "fabricio@gpcit.com.br", "+5511948765742"),
+  #    ("Camila Ferreira", "574963", "Mila", "paozinho", False, "camila@gpcit.com.br", "+5511965820350"),
+   #   ("Gabriella Teixeira", "849327","Gabis", "python_eh_vida", False, "gabriella@gpcit.com.br", "+5511983290279"),
+    #  ("Danielle Ambrósio", "xywqta", "Danis", "574242", True, "danielle@gpcit.com.br", "+5511979581481")
+#]
+#cursor.executemany(usuario_sql, usuarios)
 
-cursor.execute('select * from vendas_gpc.usuarios')
-print(' -------------  Usuários:  -------------')
-for user in cursor.fetchall():
-    print(user[1])
+#cursor.execute('select * from vendas_gpc.usuarios')
+#print(' -------------  Usuários:  -------------')
+#for user in cursor.fetchall():
+#    print(user[1])
 
 # inserindo vendass
 vendas_sql = 'INSERT INTO vendas (nf, data, empresa, vendedor, vendedor_id,cliente, produto, estado, valor, valor_final, parceiro, rma) VALUES (%s, %s, %s, %s, %s,  %s, %s, %s, %s, %s, %s, %s)'
