@@ -415,6 +415,28 @@
                     Nova venda
                   </a>
                 </li>
+
+                <li class="nav-item">
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#JanelaNotificar"
+                    class="nav-link d-flex align-items-center gap-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-send"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"
+                      />
+                    </svg>
+                    Notificar venda
+                  </button>
+                </li>
                 {% if supervisor == 1 %}
                 <li class="nav-item">
                   <a
@@ -784,6 +806,98 @@
                       data-bs-dismiss="modal"
                     >
                       Fechar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div id="JanelaNotificar" class="modal fade">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/excluir-rma?venda={{ venda.nf }}" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      New message
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label for="dest" class="col-form-label"
+                        >Recipient:</label
+                      >
+                      <select name="destinatario" id="dest" class="form-select">
+                        {% for usuario in usuarios %}
+                        <option value="{{ usuario.id_user }}">
+                          {{ usuario.nome }}
+                        </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="vendas" class="col-form-label"
+                        >Escolha a venda:</label
+                      >
+                      <select name="vendas" id="vendas" class="form-select">
+                        {% for venda in vendas %}
+                        <option value="{{ venda.nf }}">
+                          NF {{ venda.nf }} - {{ venda.cliente }} - {{
+                          venda.data }}
+                        </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label"
+                        >Prazo informado:</label
+                      >
+                      <select name="prazo" id="prazo" class="form-select">
+                        <option value="">2-3 dias</option>
+                        <option value="">2-3 dias úteis</option>
+                        <option value="">5 dias</option>
+                        <option value="">5 dias úteis</option>
+                        <option value="">7 dias</option>
+                        <option value="">7 dias úteis</option>
+                        <option value="">10 dias</option>
+                        <option value="">10 dias úteis</option>
+                        <option value="">15 dias</option>
+                        <option value="">15 dias úteis</option>
+                        <option value="">20 dias</option>
+                        <option value="">20 dias úteis</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="data-final" class="col-form-label"
+                        >Data final:</label
+                      >
+                      <input
+                        type="date"
+                        name="data-final"
+                        id="data-final"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                      Send message
                     </button>
                   </div>
                 </form>

@@ -48,6 +48,8 @@ TABLES['Usuarios'] = ('''
       `nome_de_usuario` varchar(20) NOT NULL,
       `senha` varchar(100) NOT NULL,
       `supervisor` BOOLEAN NOT NULL DEFAULT False,
+      `email` varchar(200) NOT NULL,
+      `telefone` varchar(50) NOT NULL,
       PRIMARY KEY (`id_user`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;''')
 
@@ -65,11 +67,12 @@ for tabela_nome in TABLES:
             print('OK')
 
 # inserindo usuarios
-usuario_sql = 'INSERT INTO usuarios (nome, id_user, nome_de_usuario, senha, supervisor) VALUES (%s,%s, %s, %s, %s)'
+usuario_sql = 'INSERT INTO usuarios (nome, id_user, nome_de_usuario, senha, supervisor, email, telefone) VALUES (%s,%s, %s, %s, %s,%s,%s)'
 usuarios = [
-      ("Fabricio Pereira", "102030", "lealdev", "alohomora", False),
-      ("Camila Ferreira", "574963", "Mila", "paozinho", False),
-      ("Gabriella Teixeira", "849327","Gabis", "python_eh_vida", False)
+      ("Fabricio Pereira", "102030", "lealdev", "alohomora", False, "fabricio@gpcit.com.br", "+5511948765742"),
+      ("Camila Ferreira", "574963", "Mila", "paozinho", False, "camila@gpcit.com.br", "+5511965820350"),
+      ("Gabriella Teixeira", "849327","Gabis", "python_eh_vida", False, "gabriella@gpcit.com.br", "+5511983290279"),
+      ("Danielle Ambrósio", "xywqta", "Danis", "574242", True, "danielle@gpcit.com.br", "+5511979581481")
 ]
 cursor.executemany(usuario_sql, usuarios)
 

@@ -39,6 +39,8 @@ class Usuarios(db.Model):
   nome_de_usuario = db.Column(db.String(50), nullable=False)
   senha = db.Column(db.String(100), nullable=False)
   supervisor = db.Column(db.Boolean, nullable=False)
+  email = db.Column(db.String(200), nullable=False)
+  telefone = db.Column(db.String(50), nullable=False)
   
 
   def __repr__(self) :
@@ -142,6 +144,8 @@ def criar_novo_usuario():
   nome = request.form['nome']
   senha = request.form['senha_do_usuario']
   supervisao = request.form['supervisao']
+  email = request.form['email']
+  telefone = request.form['telefone']
   alfabeto = string.ascii_lowercase
   numeros = '123456789'
   combinar = alfabeto + numeros
@@ -149,7 +153,7 @@ def criar_novo_usuario():
 
   id_user = ''.join(random.sample(combinar, comprimento))
 
-  novo_usuario = Usuarios(nome = nome, id_user = id_user, senha=senha, nome_de_usuario=nome_de_usuario, supervisor= bool(supervisao) )
+  novo_usuario = Usuarios(nome = nome, id_user = id_user, senha=senha, nome_de_usuario=nome_de_usuario, supervisor= bool(supervisao), email=email, telefone=telefone )
 
   db.session.add(novo_usuario)
   db.session.commit()
@@ -179,6 +183,8 @@ def alterar_cadastro_bd():
   usuario.nome = request.form['nome']
   usuario.senha = request.form['senha_do_usuario']
   supervisor = request.form['supervisao']
+  usuario.email = request.form['email']
+  usuario.telefone = request.form['telefone']
   
   if supervisor == '1':
     usuario.supervisor = True
