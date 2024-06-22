@@ -10,9 +10,8 @@ var valores = []
 array_dates.forEach(item => {
   lista.push(item.value)
 })
-
-array_values.forEach(item => {
-  var valor = Number(item.value)
+array_values.forEach(val => {
+  var valor = Number(val.value)
   if (valores.length == 0) {
     valores.push(valor)
   } else {
