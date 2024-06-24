@@ -202,7 +202,7 @@ def alterar():
     dt_bd.reverse()
     vd_localizada.data = '-'.join(dt_bd)
 
-    return render_template("alterar.html", venda=vd_localizada, titulo="Alterar venda - Gerenciamento de vendas")
+    return render_template("alterar.html", venda=vd_localizada, titulo="Alterar venda - Gerenciamento de vendas", )
   return redirect(url_for('index'))
 
 @app.route('/alterar-venda-bd', methods=['POST',])
@@ -217,7 +217,6 @@ def alterar_bd():
   dt_input.reverse()
   venda.data = '/'.join(dt_input)
   venda.empresa = request.form['empresa']
-  venda.vendedor = request.form['vendedor']
   venda.cliente = request.form['cliente']
   venda.produto = request.form['produto']
   venda.estado = request.form['estado']
