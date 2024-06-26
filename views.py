@@ -1,9 +1,10 @@
 from flask import render_template, request, session, flash, redirect, url_for
 from app import app, db
-from models import Vendas, Usuarios
+from wtforms import SelectField
+from models import Vendas, Usuarios,FormularioVenda
 import string
-import random
-
+import random 
+  
 @app.route('/')
 def index():
   usuario_exist = Usuarios.query.all()
@@ -22,6 +23,7 @@ def index():
         vendas = Vendas.query.filter_by(vendedor_id=usuario.id_user).order_by(Vendas.data)
 
       usuarios = Usuarios.query.order_by(Usuarios.nome)
+
       # renderiza o index, com atributos Nome, e envia a lista de vendas para o HTML
       return render_template('index.html', usuario=usuario.nome,
       supervisor=usuario.supervisor , vendas=vendas, usuarios=usuarios)
@@ -38,9 +40,16 @@ def nova_venda():
       return redirect('/login')
     else:
       # a variárel usuários oferece uma lista com o nome dos vendedores para o HTML
+
       usuarios = Usuarios.query.order_by(Usuarios.nome)
+      escolhas = []
+      for usuario in usuarios:
+        escolhas.append((f'{usuario.id_user}', f'{usuario.nome}'))
+
+      FormularioVenda.vendedor = SelectField('Vendedor(es)', choices=escolhas)
+      form = FormularioVenda()
       # renderiza o template de nova venda
-      return render_template('nova_venda.html', users=usuarios, titulo="Nova venda - Gerenciamento de vendas")
+      return render_template('nova_venda.html', users=usuarios, titulo="Nova venda - Gerenciamento de vendas", form=form)
   
   return redirect(url_for('index'))
 # rota intermediária para inserir dados da app no Banco de dados
@@ -49,27 +58,27 @@ def inserir():
   if 'usuario_logado' not in session or session['usuario_logado'] == None:
     return redirect('/login')
 
-  nf = request.form['nf']
-  dt_input = request.form['data'].split('-')
+  form = FormularioVenda(request.form)
+
+  nf = form.nf.data
+  dt_input = str(form.data.data).split('-')
   dt_input.reverse()
   # a data está sendo formatada para o modelo usado no Brasil
   data_br = '/'.join(dt_input)
-  empresa = request.form['empresa']
-  vendedor_id = request.form['ids-vendedor']
-
+  empresa = form.empresa.data
+  vendedor_nome = dict(form.vendedor.choices).get(form.vendedor.data)
   #A variáriel user localiza no banco de dados "usuarios" o id do vendedor enviado pelo HTML
-  user = Usuarios.query.filter_by(id_user=vendedor_id).first()
+  user = Usuarios.query.filter_by(nome=vendedor_nome).first()
   # A variável vendedor_nome recebe o nome do id do usuário localizado anteriormente
-  vendedor_nome = user.nome
+  vendedor_id = user.id_user
 
-  cliente = request.form['cliente']
-  produto = request.form['produto']
-  estado = request.form['estado']
-  valor = request.form['valor']
-  valor_final = request.form['valor_final']
-  parceiro = request.form['parceiro']
+  cliente = form.cliente.data
+  produto = form.produto.data
+  estado = form.estado.data
+  valor = form.valor.data
+  valor_final = form.valor_final.data
+  parceiro = form.parceiro.data
   rma = False
-
   # adiciona a uma variável "venda" o item do banco da dados filtrado pelo numero da nf
   venda = Vendas.query.filter_by(nf=nf).first()
 
@@ -84,6 +93,7 @@ def inserir():
   # Enviando e commitando os dados para o banco de dados
   db.session.add(nova_vd)
   db.session.commit()
+  
 
   return redirect('/')
 

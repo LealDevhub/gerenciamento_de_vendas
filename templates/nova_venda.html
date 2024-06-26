@@ -4,107 +4,48 @@
   <form method="post" action="/inserir">
     <h1 class="h3 mb-3 fw-normal">Nova venda</h1>
 
-    <div class="form-floating">
-      <input type="number" class="form-control" id="floatingInput" name="nf" />
-      <label for="floatingInput">N° da Nota Fiscal</label>
+    <div class="form-group">
+      {{ form.nf.label() }} {{ form.nf(class="form-control") }}
     </div>
 
-    <div class="form-floating">
-      <input
-        type="date"
-        class="form-control"
-        id="floatingPassword"
-        name="data"
-      />
-      <label for="floatingPassword">Data da venda</label>
+    <div class="form-group">
+      {{ form.data.label() }} {{ form.data(class="form-control") }}
     </div>
 
-    <div class="form-floating">
-      <input
-        type="number"
-        class="form-control"
-        id="floatingPassword"
-        name="empresa"
-        maxlength="2"
-        max="11"
-      />
-      <label for="floatingPassword">Empresa (Digite o n°)</label>
+    <div class="form-group">
+      {{ form.empresa.label() }} {{ form.empresa(class="form-control") }}
     </div>
 
-    <div class="form-floating">
-      <select name="ids-vendedor" id="ids-vendedor" class="form-select">
-        {% for user in users %}
-        <option value="{{ user.id_user }}">{{ user.nome }}</option>
-        {% endfor %}
-      </select>
-      <label for="ids-vendedor">Vendedor(es)</label>
+    <div class="form-group">
+      {{ form.vendedor.label() }} {{ form.vendedor(class="form-select") }}
     </div>
 
-    <div class="form-floating">
-      <input
-        type="text"
-        class="form-control"
-        id="floatingPassword"
-        name="cliente"
-      />
-      <label for="floatingPassword">Nome do Cliente/Empresa</label>
+    <div class="form-group">
+      {{ form.cliente.label() }} {{ form.cliente(class="form-control") }}
     </div>
 
-    <div class="form-floating">
-      <input
-        type="text"
-        class="form-control"
-        id="floatingPassword"
-        name="produto"
-      />
-      <label for="floatingPassword">Nome do produto</label>
+    <div class="form-group">
+      {{ form.produto.label() }} {{ form.produto(class="form-control") }}
     </div>
 
-    <div class="form-floating">
-      <input
-        type="text"
-        class="form-control"
-        id="floatingPassword"
-        name="estado"
-      />
-      <label for="floatingPassword">UF do Cliente/Empresa</label>
+    <div class="form-group">
+      {{ form.estado.label() }} {{ form.estado(class="form-control") }}
     </div>
 
-    <div class="form-floating">
-      <input
-        type="number"
-        class="form-control"
-        id="floatingPassword"
-        name="valor"
-      />
-      <label for="floatingPassword">Valor da venda (ex. 2160.00)</label>
+    <div class="form-group">
+      {{ form.valor.label() }} {{ form.valor(class="form-control") }}
     </div>
 
-    <div class="form-floating">
-      <input
-        type="number"
-        class="form-control"
-        id="floatingPassword"
-        name="valor_final"
-      />
-      <label for="floatingPassword">Valor da venda final (ex. 2160.00)</label>
+    <div class="form-group">
+      {{ form.valor_final.label() }} {{ form.valor_final(class="form-control")
+      }}
     </div>
 
-    <div class="form-floating">
-      <input
-        type="text"
-        class="form-control"
-        id="floatingPassword"
-        name="parceiro"
-      />
-      <label for="floatingPassword"
-        >Nome do Parceiro (caso não tenha, digite "--")</label
-      >
+    <div class="form-group">
+      {{ form.parceiro.label() }} {{ form.parceiro(class="form-control") }}
     </div>
 
-    <button class="btn btn-primary w-100 py-2 my-3" type="submit">
-      Enviar
-    </button>
+    <div>{{ form.enviar(class="btn btn-primary w-100 py-2 my-3") }}</div>
     <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
   </form>
 </main>
