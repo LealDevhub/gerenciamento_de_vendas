@@ -3,6 +3,8 @@
 # 📊 Gerenciamento de Vendas
 Sistema para gestão e acompanhamento de vendas comerciais entre supervisores e equipe de vendas, permitindo um controle eficiente do histórico, visibilidade da meta mensal, exportar planilha de comissionamento, script de status de pedido para consultar os supervisores.
 
+### EM DESENVOVIMENTO
+
 ## 🛠️ Quais tecnologias foram utilizadas?
 - [x] <strong>Frontend:</strong> HTML, CSS, Bootstrap
 - [x] <strong>Backend:</strong> Python, Flask
